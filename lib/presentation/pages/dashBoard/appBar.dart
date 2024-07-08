@@ -51,13 +51,14 @@ class _DashBoardAppBarState extends State<DashBoardAppBar> {
   Widget _categoryDropDown() {
     return DropdownButtonHideUnderline(
       child: DropdownButton<String>(
+        isExpanded: true,
         hint: Txt(
           AppStrings.selectCategory,
           color: Colors.black,
           fontSize: SizeConfig.mediumFont,
         ),
         value: selectedCategory,
-        icon: const Icon(Icons.expand_more, color: Colors.black),
+        icon: const Icon(Icons.expand_more, color: Colors.black,),
         onChanged: (String? newValue) {
           setState(() {
             selectedCategory = newValue;

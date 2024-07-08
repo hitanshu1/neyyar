@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_test/flutter_test.dart';
+
 import 'package:mocktail/mocktail.dart';
 import 'package:neyyar/domain/repositories/category.dart';
 import 'package:neyyar/domain/repositories/course.dart';
@@ -17,10 +18,13 @@ import 'package:neyyar/presentation/pages/home/tab.dart';
 import 'package:neyyar/presentation/pages/liveClass/tab.dart';
 import 'package:neyyar/presentation/pages/notification/tab.dart';
 
+
+/// Mock class for DashBoardBloc
 class MockDashBoardBloc extends Mock implements DashBoardBloc {}
 class MockCategoryRepository extends Mock implements CategoryRepository {}
 class MockCourseRepository extends Mock implements CourseRepository {}
 class MockOfferRepository extends Mock implements OfferRepository {}
+
 
 void main() {
   late MockDashBoardBloc mockDashBoardBloc;
@@ -37,6 +41,8 @@ void main() {
     when(() => mockDashBoardBloc.stream).thenAnswer((_) => Stream<DashBoardState>.fromIterable(<DashBoardState>[
       const DashBoardState(),
       const DashBoardState(pageIndex: 1),
+      
+     
     ]));
 
     when(() => mockDashBoardBloc.state).thenReturn(const DashBoardState());
@@ -51,7 +57,7 @@ void main() {
     mockDashBoardBloc.close();
   });
 
-  testWidgets('DashBoardPage displays HomeTab initially and checks state changes', (WidgetTester tester) async {
+  testWidgets('DashBoardPage displays HomeTab initially and check ', (WidgetTester tester) async {
     await tester.pumpWidget(
       MultiBlocProvider(
         providers: [
@@ -79,18 +85,20 @@ void main() {
     print('Initial pump completed');
     expect(find.byType(HomeTab), findsOneWidget);
     expect(find.byType(LiveClassTab), findsNothing);
-    expect(find.byType(NotificationTab), findsNothing);
+     expect(find.byType(NotificationTab), findsNothing);
 
-    // Trigger the first state change
     mockDashBoardBloc.add(const ChangeTabDashBoardEvent(1));
-    print('Event 1 added');
-    await tester.pumpAndSettle();
+    print('Event added');
 
-    final currentState1 = mockDashBoardBloc.state;
-    print('Current state after event 1: $currentState1');
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 100));
+    await tester.pump();
+    print('Manual pump completed');
 
     expect(find.byType(LiveClassTab), findsOneWidget);
     expect(find.byType(HomeTab), findsNothing);
     expect(find.byType(NotificationTab), findsNothing);
+    
   });
 }
+
